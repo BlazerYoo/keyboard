@@ -5,6 +5,7 @@
 #https://gist.github.com/Aniruddha-Tapas/1627257344780e5429b10bc92eb2f52a
 #https://stackoverflow.com/questions/13564851/how-to-generate-keyboard-events
 
+import time
 import serial, ctypes
 from key import PressKey, ReleaseKey
 
@@ -42,8 +43,16 @@ arduino = serial.Serial('COM5', 9800, timeout=1)
 
 while True:
     serialOutput = arduino.readline().decode()
-    print(serialOutput == 'Q\r\n')
 
+    # serial output is not blank
+    if len(serialOutput) != 0:
+        # remove \r\n from send
+        serialOutput = serialOutput[:-2]
+        #print(serialOutput.lower(), keys[serialOutput.lower()])
+        key = keys[serialOutput.lower()]
+        PressKey(key)
+        time.sleep(0.001)
+        ReleaseKey(key)
 
 #arduino.close()
 
